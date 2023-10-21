@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { readdirSync, unlinkSync } from 'fs';
+import { readdirSync, existsSync, unlinkSync } from 'fs';
 const AdmZip = require('adm-zip');
 
 @Controller('file-sharing')
@@ -8,10 +8,12 @@ export class FileSharingController {
   private readonly zipName = 'files.zip';
 
   constructor() {
-    try {
-      unlinkSync(this.zipName);
-    } catch {
-      console.error('Unable to delete previous zip file');
+    if (existsSync(this.zipName)) {
+      try {
+        unlinkSync(this.zipName);
+      } catch {
+        console.error('Unable to delete previous zip file');
+      }
     }
   }
 
