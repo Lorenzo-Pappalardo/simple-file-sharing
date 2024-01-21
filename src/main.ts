@@ -1,13 +1,18 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import express from "express";
+import sendZipFile from "./file-sharing";
 
-async function bootstrap() {
-  const hostname = '0.0.0.0';
-  const port = 80;
-  const app = await NestFactory.create(AppModule);
+const app = express();
+const hostname = "0.0.0.0";
+const port = 80;
 
-  await app.listen(port, hostname, () => {
-    console.log(`Listening at ${hostname}:${port}`);
-  });
-}
-bootstrap();
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.get("/fs", (req, res) => {
+  sendZipFile(res);
+});
+
+app.listen(port, hostname, () => {
+  console.log(`Listening at ${hostname}:${port}`);
+});
