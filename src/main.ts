@@ -1,15 +1,15 @@
-import express from "express";
-import sendZipFile from "./file-sharing";
+import express from 'express';
+import sendZipFile from './file-sharing';
 
 const app = express();
-const hostname = "0.0.0.0";
+const hostname = '0.0.0.0';
 const port = 80;
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get('/', (_, res) => {
+  res.send('Hello World!');
 });
 
-app.get("/fs", (req, res) => {
+app.get('/fs', (_, res) => {
   sendZipFile(res);
 });
 
