@@ -1,9 +1,9 @@
-import AdmZip from "adm-zip";
-import { Response } from "express";
-import { existsSync, readdirSync, unlinkSync } from "fs";
+import AdmZip from 'adm-zip';
+import { Response } from 'express';
+import { existsSync, readdirSync, unlinkSync } from 'fs';
 
-export default function sendZipFile(res: Response) {
-  const directory = "./files";
+export default function send(res: Response): Promise<boolean> {
+  const directory = './files';
 
   try {
     const files = readdirSync(directory);
@@ -14,39 +14,37 @@ export default function sendZipFile(res: Response) {
       } else {
         handleMultipleFiles(directory, files, res);
       }
+
+      return Promise.resolve(true);
     } else {
-      res.status(500).json("No files!");
+      res.status(500).json('No files!');
     }
   } catch (error) {
     res.status(500).send(error);
   }
+
+  return Promise.resolve(false);
 }
 
 function handleSingleFile(fileName: string, res: Response) {
-  res.download(fileName, (error) => {
+  res.download(fileName, error => {
     if (error !== undefined) {
       console.error(error);
     }
   });
 }
 
-function handleMultipleFiles(
-  directory: string,
-  files: ReadonlyArray<string>,
-  res: Response
-) {
+function handleMultipleFiles(directory: string, files: ReadonlyArray<string>, res: Response) {
   const zip = new AdmZip();
 
-  files.forEach((file) => {
+  files.forEach(file => {
     zip.addLocalFile(`${directory}/${file}`);
   });
 
-  const zipFileName = `${Intl.DateTimeFormat("en-GB")
-    .format()
-    .replaceAll("/", "-")}.zip`;
+  const zipFileName = `${Intl.DateTimeFormat('en-GB').format().replaceAll('/', '-')}.zip`;
 
   zip.writeZip(zipFileName);
-  res.download(zipFileName, (error) => {
+  res.download(zipFileName, error => {
     if (error !== undefined) {
       console.error(error);
     }

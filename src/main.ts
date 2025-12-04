@@ -1,5 +1,5 @@
 import express from 'express';
-import sendZipFile from './file-sharing';
+import send from './file-sharing';
 
 const app = express();
 const hostname = '0.0.0.0';
@@ -9,8 +9,13 @@ app.get('/', (_, res) => {
   res.send('Hello World!');
 });
 
-app.get('/fs', (_, res) => {
-  sendZipFile(res);
+app.get('/fs', async (req, res) => {
+  console.log(`[${req.ip}]: Connected.`);
+
+  const result = await send(res);
+
+  if (result) console.log(`[${req.ip}]: Transfer succeeded.`);
+  else console.error(`[${req.ip}]: Transfer failed.`);
 });
 
 app.listen(port, hostname, () => {
