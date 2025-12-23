@@ -11,7 +11,6 @@
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "incremental": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
